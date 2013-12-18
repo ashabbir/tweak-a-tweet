@@ -1,0 +1,33 @@
+readall <- read.csv("readall.csv", header=TRUE, sep=",")
+
+
+OR
+---------------
+
+readlabel <- read.csv("readlabel.csv", header=FALSE, sep=",")
+
+readtable <- subset(readlabel, select = -c(V1))
+norm <- as.data.frame(lapply(readtable, scaleMaxMin))
+
+dist <- dist(norm)
+
+m <- cmdscale(dist,2)
+
+mds <- as.data.frame(m)
+
+colnames(mds) <- c("V1","V2")
+
+readall <- data.frame(group=readlabel["V1"],x=mds["V1"],y=mds["V2"])
+
+---------------
+
+
+plot(readall$X, readall$Y, pch=16, col=readall$Group)
+session.zoom()
+
+q <- qplot(X,Y,data=readall,colour=Group)
+q + facet_wrap( ~ Group, ncol=4)
+
+
+
+
